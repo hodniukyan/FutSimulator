@@ -1,0 +1,28 @@
+# Build
+bin/
+obj/
+
+# Banco de dados
+*.db
+*.db-wal
+*.db-shm
+
+# Arquivos de ambiente
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+*.tsbuildinfo
+TestResults/
+artifacts/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db

@@ -1,0 +1,12 @@
+# Optional API container using your EXISTING MySQL server; no database is created here.
+services:
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection:?Configure the existing MySQL connection in .env}
+      Database__ServerVersion: ${Database__ServerVersion:-}
+      Cors__AllowedOrigins__0: ${Cors__AllowedOrigins__0:-http://localhost:5173}
+      Cors__AllowedOrigins__1: ${Cors__AllowedOrigins__1:-http://localhost:4173}

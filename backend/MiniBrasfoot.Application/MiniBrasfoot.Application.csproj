@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../MiniBrasfoot.Domain/MiniBrasfoot.Domain.csproj" />
+  </ItemGroup>
+</Project>
