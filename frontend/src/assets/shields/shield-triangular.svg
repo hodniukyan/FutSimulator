@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" role="img" aria-label="Escudo triangular com bola de futebol">
+  <path d="M8 19H112L60 133Z" fill="var(--primary-color, #F97316)" stroke="var(--secondary-color, #17212B)" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M23 30H97L60 111Z" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="60" cy="66" r="21" fill="#FFFFFF" stroke="var(--secondary-color, #17212B)" stroke-width="3"/>
+  <path d="m60 55 10 7-4 12H54l-4-12Z" fill="var(--secondary-color, #17212B)"/>
+  <path d="M60 55V46M70 62l9-4M66 74l6 8M54 74l-6 8M50 62l-9-4" fill="none" stroke="var(--secondary-color, #17212B)" stroke-width="2.5"/>
+</svg>

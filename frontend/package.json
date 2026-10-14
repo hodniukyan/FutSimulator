@@ -7,7 +7,8 @@
     "dev": "vite --host localhost",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview --host localhost"
+    "preview": "vite preview --host localhost",
+    "test": "vitest run"
   },
   "dependencies": {
     "@hookform/resolvers": "5.9.1",
@@ -39,6 +40,8 @@
     "tailwindcss": "4.3.3",
     "typescript": "5.9.3",
     "typescript-eslint": "8.71.2",
-    "vite": "8.3.4"
+    "vite": "8.3.4",
+    "vite-plugin-svgr": "5.2.0",
+    "vitest": "5.0.4"
   }
 }

@@ -1,5 +1,41 @@
 # Validação — fase 1, 12/10/2026 (America/Cuiaba)
 
+## Etapa 2 — 13/10/2026 (America/Cuiaba)
+
+| Verificação executada | Resultado |
+| --- | --- |
+| Build .NET | Sucesso, zero erros e avisos |
+| xUnit | 58 aprovados, zero falhas/ignorados |
+| Build React/TypeScript/Vite e ESLint | Sucesso |
+| Vitest | 16 aprovados em dois arquivos |
+| SVGs fornecidos | Hashes preservados; testes com os desenhos reais comparando atributos/elementos |
+| EF modelo vs snapshot | Nenhuma diferença após AddCustomTeamBadges |
+| Migration/SQL Up | Quatro ADD COLUMN e histórico, sem remoção/alteração de dados existentes; não aplicada |
+| Auditoria npm da instalação final | Zero vulnerabilidades reportadas |
+| Auditoria NuGet (transitivas dos testes) | Nenhum pacote vulnerável reportado |
+| Interface desktop/mobile | Formulário/preview inspecionados; a 390px, documento com 375px, sem overflow horizontal |
+| Fluxo de interface com API simulada | Cor inválida bloqueada; cadastro, 11 jogadores, listagem atualizada e escudos no placar |
+
+Testes novos: nome/país/template/cores (incluindo null, tamanho e quebra de linha), 11 jogadores e distribuição, 200 sementes com nomes únicos/valores válidos, reprodutibilidade, limites inclusivos e 100 partidas sem GK marcando. Endpoint calcula força e IsCustom mesmo se enviados valores arbitrários extras. PUT legado mantém o escudo; endpoints anteriores continuam cobertos.
+
+EfGameStore usa SQLite relacional em memória exclusivamente no projeto Tests. Uma falha NOT NULL no sexto jogador ocorre após inserção do clube dentro da transação; o rollback preserva registros anteriores e elimina o cadastro parcial. Isso não equivale a teste no MySQL real. Não se aplicou migration, não se consultou o schema atual e não se cadastrou clube no banco do usuário nesta etapa.
+
+O sandbox inicialmente bloqueou DNS npm/NuGet e VSTest/testhost. Instalações, auditoria NuGet e xUnit concluíram fora dele após aprovação das ferramentas. Não foi aumentado o timeout para esconder a falha. A dependência nativa SQLite antiga trouxe um aviso de vulnerabilidade na primeira instalação e foi substituída pelo bundle 3.0.5. Compilação final sem avisos; SVGR/Vitest têm versões fixadas.
+
+Browser usou Vite de QA (5174) e respostas HTTP simuladas em memória (5064), sem MySQL. Preview conferido por estilos computados: preenchimento rgb(22,93,255), contorno rgb(255,215,0), coroa #FFFFFF, viewBox 0 0 120 140. Sessões temporárias encerradas. Competições e reprodução visual de 30 segundos não foram implementadas.
+
+![Formulário desktop com SVG original e cores escolhidas](images/etapa2-desktop.jpg)
+
+![Formulário mobile](images/etapa2-mobile.jpg)
+
+![Elenco retornado pela API simulada de QA](images/etapa2-roster.jpg)
+
+Inventário, dependências, comandos e pendências: [ETAPA2.md](ETAPA2.md).
+
+---
+
+Resultados abaixo pertencem à Fase 1 e não foram repetidos como verificação do MySQL nesta etapa.
+
 ## Resultados executados
 
 | Verificação | Resultado |

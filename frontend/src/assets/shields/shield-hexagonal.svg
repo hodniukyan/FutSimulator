@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" role="img" aria-label="Escudo hexagonal com bola de futebol">
+  <path d="M60 7 108 34V101L60 133 12 101V34Z" fill="var(--primary-color, #F97316)" stroke="var(--secondary-color, #17212B)" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M60 18 98 40V95L60 120 22 95V40Z" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+  <circle cx="60" cy="70" r="24" fill="#FFFFFF" stroke="var(--secondary-color, #17212B)" stroke-width="3"/>
+  <path d="m60 58 11 8-4 13H53l-4-13Z" fill="var(--secondary-color, #17212B)"/>
+  <path d="M60 58V47M71 66l11-4M67 79l7 10M53 79l-7 10M49 66l-11-4" stroke="var(--secondary-color, #17212B)" stroke-width="3" fill="none"/>
+</svg>

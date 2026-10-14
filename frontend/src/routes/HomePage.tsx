@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { ArrowRight, LoaderCircle, RotateCcw } from 'lucide-react'
@@ -8,13 +8,16 @@ import { useTeams } from '@/features/teams/use-teams'
 import { simulateMatch } from '@/features/matches/api'
 import { matchSchema, type MatchFormValues } from '@/features/matches/schema'
 import { getHttpError } from '@/services/http'
+import { Link } from 'react-router-dom'
+import { TeamBadge } from '@/features/teams/components/TeamBadge'
 
 export function HomePage() {
   const teams = useTeams()
   const match = useMutation({ mutationFn: (values: MatchFormValues) => simulateMatch(Number(values.team1Id), Number(values.team2Id)) })
-  const { register, handleSubmit, formState: { errors } } = useForm<MatchFormValues>({
+  const { register, handleSubmit, control, formState: { errors } } = useForm<MatchFormValues>({
     resolver: zodResolver(matchSchema), defaultValues: { team1Id: '', team2Id: '' },
   })
+  const selectedTeamIds = useWatch({ control, name: ['team1Id', 'team2Id'] })
   return <>
     <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary">Central do treinador</p>
     <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">O próximo jogo está nas suas mãos.</h1>
@@ -28,7 +31,7 @@ export function HomePage() {
           <p className="text-sm text-destructive">{getHttpError(teams.error)}</p>
           <Button variant="outline" className="mt-3" onClick={() => void teams.refetch()} disabled={teams.isFetching}><RotateCcw /> Tentar novamente</Button>
         </div>}
-        {teams.isSuccess && teams.data.length < 2 && <p className="mt-6 text-sm text-muted-foreground">Cadastre pelo menos dois clubes na API para começar.</p>}
+        {teams.isSuccess && teams.data.length < 2 && <p className="mt-6 text-sm text-muted-foreground">Cadastre pelo menos dois clubes para começar. <Link to="/clubs/new" className="text-primary underline">Criar clube</Link></p>}
         {teams.isSuccess && teams.data.length >= 2 && <form className="mt-6 space-y-5" onSubmit={handleSubmit(values => { if (!match.isPending) match.mutate(values) })}>
           <div className="grid gap-4 sm:grid-cols-2">
             {(['team1Id', 'team2Id'] as const).map((field, index) => <div key={field}>
@@ -40,6 +43,12 @@ export function HomePage() {
               </select>
               {errors[field] && <p id={`${field}-error`} className="mt-2 text-xs text-destructive">{errors[field]?.message}</p>}
             </div>)}
+          </div>
+          <div className="flex flex-wrap justify-center gap-6">
+            {selectedTeamIds.map((id, index) => {
+              const team = teams.data.find(team => team.id === Number(id))
+              return team && <div key={index} className="flex items-center gap-2 text-xs"><TeamBadge template={team.badgeTemplate} primaryColor={team.primaryColor} secondaryColor={team.secondaryColor} name={team.name} size={32} /><span>{team.name}</span></div>
+            })}
           </div>
           <Button type="submit" className="w-full" disabled={match.isPending}>
             {match.isPending ? <><LoaderCircle className="animate-spin" /> Simulando...</> : <>Simular partida <ArrowRight /></>}
@@ -53,6 +62,12 @@ export function HomePage() {
           {match.isPending ? <p className="py-10 text-center text-sm text-muted-foreground">A bola está rolando...</p>
             : match.isSuccess ? <>
               <div className="py-7 text-center">
+                <div className="mb-4 flex justify-center gap-10">
+                  {[match.variables.team1Id, match.variables.team2Id].map((id, index) => {
+                    const team = teams.data?.find(team => team.id === Number(id))
+                    return team && <TeamBadge key={index} template={team.badgeTemplate} primaryColor={team.primaryColor} secondaryColor={team.secondaryColor} name={team.name} />
+                  })}
+                </div>
                 <p className="text-sm text-muted-foreground">{match.data.team1} × {match.data.team2}</p>
                 <p className="mt-2 text-5xl font-semibold tabular-nums text-primary">{match.data.score}</p>
               </div>

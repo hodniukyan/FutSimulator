@@ -69,6 +69,7 @@ O `.env.example` da raiz documenta variáveis do backend e Compose. `dotnet run`
 | Método | Rota | Comportamento |
 | --- | --- | --- |
 | GET/POST | /teams | Listar/criar times |
+| POST | /teams/custom | Criar clube personalizado e seus 11 jogadores atomicamente |
 | GET/PUT/DELETE | /teams/{id} | Consultar/atualizar/excluir time |
 | POST | /players | Criar jogador vinculado a um time existente |
 | GET/PUT/DELETE | /players/{id} | Consultar/atualizar/excluir jogador |
@@ -77,7 +78,28 @@ O `.env.example` da raiz documenta variáveis do backend e Compose. `dotnet run`
 | POST | /match?team1Id=X&team2Id=Y | Simular amistoso |
 | GET | /health | Disponibilidade do processo, sem verificar banco |
 
-O frontend inicial permite selecionar clubes e simular o amistoso existente, com estados vazio/carregamento/erro, resultado e artilheiros. Não há telas completas de gerenciamento nesta fase.
+O frontend permite simular amistosos, listar clubes em `/clubs` e criar clubes em `/clubs/new`, com prévia dos três escudos originais e cores dinâmicas. Após o cadastro, exibe o clube e seus 11 jogadores. Escudos são reutilizados nos cards, seleção de times e placar; clubes anteriores recebem iniciais neutras.
+
+### Clubes personalizados — Etapa 2
+
+```http
+POST /teams/custom
+Content-Type: application/json
+
+{
+  "name": "FutSimulator FC",
+  "country": "Brasil",
+  "badgeTemplate": "shield-hexagonal",
+  "primaryColor": "#FF6B00",
+  "secondaryColor": "#111827"
+}
+```
+
+Retorna **201 Created**, `Location: /teams/{id}` e `{ "team": { ... }, "players": [ ... ] }`. Campos inválidos retornam **400** com ProblemDetails. Os três templates aceitos são `shield-hexagonal`, `shield-round` e `shield-triangular`. Nome/país são normalizados com trim, obrigatórios e limitados a 100 caracteres; cores exigem #RRGGBB e são persistidas em maiúsculas.
+
+O backend gera 11 nomes fictícios únicos por elenco, idades de 18 a 32 e habilidades de 50 a 80, com todos os limites inclusivos. Formação 4-4-2: 1 GK, 4 DEF, 4 MEI, 2 ATT. Zagueiros/laterais e volantes/meias usam os códigos agrupados existentes. Força inicial é a média truncada das habilidades. Não envie `strength` ou `isCustom`: não fazem parte do contrato de criação personalizada.
+
+SVGs são importados como componentes React via SVGR, sem otimização dos desenhos. `TeamBadge` aplica variáveis CSS locais; branco, bolas, coroa e geometria permanecem iguais. Veja [arquitetura](docs/ARCHITECTURE.md) para adicionar templates e [entrega da Etapa 2](docs/ETAPA2.md) para arquivos e pendências.
 
 Nome/país/posição são obrigatórios; força e habilidade devem ser positivas. Essas validações também se aplicam ao PUT. Atualizar jogador não transfere TeamId. Não se pode jogar contra o mesmo clube ou excluir clube com jogadores (409).
 
@@ -105,6 +127,8 @@ Histórico ainda não é persistido; seu modelo existente foi preservado para um
 
 Os arquivos SQLite antigos continuam intactos, mas a aplicação usa MySQL. A migration `InitialMySql` foi preservada. `AddPlayerTeamRelationship` prepara índice e FK com exclusão restrita; foi gerada **sem aplicação ao banco**.
 
+Na Etapa 2, `AddCustomTeamBadges` acrescenta quatro colunas em Teams e também permanece **sem aplicação**. O código novo requer essas colunas para consultar/gravar times no MySQL. Antes de iniciar a API nova contra o banco existente, revise/aplique as migrations pendentes após backup e autorização. SQL aditivo de revisão: [docs/mysql-custom-team-badges.sql](docs/mysql-custom-team-badges.sql). As etapas estão em [docs/DATABASE.md](docs/DATABASE.md).
+
 ```powershell
 # Apenas SELECT: versão, contagens, órfãos, histórico de migrations e FKs.
 dotnet run --project tools/DatabaseProbe
@@ -122,6 +146,7 @@ dotnet build BrasfootAPI.sln -m:1 /nr:false
 dotnet test backend/MiniBrasfoot.Tests/MiniBrasfoot.Tests.csproj --no-build -m:1 /nr:false
 npm --prefix frontend run lint
 npm --prefix frontend run build
+npm --prefix frontend run test
 ```
 
 O parâmetro `-m:1 /nr:false` evita limitações de subprocessos MSBuild em ambientes Windows restritos. VSTest pode exigir execução fora do sandbox para conectar seus processos.
@@ -140,6 +165,7 @@ Docker não estava instalado/disponível durante a validação; esse fluxo ainda
 - [Banco de dados](docs/DATABASE.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Auditoria inicial](docs/AUDIT.md)
+- [Guia da Etapa 2 para quem vem do WebForms](output/pdf/FutSimulator-Etapa2-Guia-Para-Quem-Vem-do-WebForms.pdf)
 - [Instruções para agentes](AGENTS.md)
 
 Campeonatos, transferências, finanças, temporadas, saves e autenticação permanecem para etapas futuras.

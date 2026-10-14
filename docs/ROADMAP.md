@@ -6,6 +6,12 @@ Separação de responsabilidades, preservação do MySQL, contratos DTO, tratame
 
 ## Próximas etapas propostas
 
+### Etapa 2 — implementada, schema aguardando aplicação autorizada
+
+Criação de clube personalizado via POST /teams/custom, elenco automático 4-4-2, força inicial no backend, gravação atômica, SVGs originais com cores por instância, listagem/formulário responsivos e escudos no placar. Migration AddCustomTeamBadges preparada sem aplicação. Testes cobrem contratos antigos, validação, geração, compatibilidade com simulação e rollback em banco de teste.
+
+Próximo passo operacional: backup/preflight/revisão das migrations pendentes e autorização antes de atualizar o MySQL. Próxima etapa funcional: competições mata-mata com 4/8/16/32 clubes, sorteio controlável, pênaltis e avanço automático, conforme a proposta em ARCHITECTURE.md. Reprodução visual de partidas em 30 segundos fica nessa etapa futura; o simulador atual permanece intacto.
+
 1. CRUD visual de clubes e jogadores, reutilizando os endpoints atuais; preservar escopo antes de criar telas completas.
 2. Histórico de partidas: persistir uma única vez o mesmo resultado retornado, com IDs de clubes, gols e data UTC; definir política de exclusão de clubes históricos.
 3. Elencos: hoje Player.TeamId representa vínculo atual. Ao introduzir temporadas, avaliar inscrição por temporada, sem duplicar dados prematuramente.

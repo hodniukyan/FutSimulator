@@ -11,6 +11,34 @@ Decisão do usuário: preservar MySQL, conexão local e dados. PostgreSQL não f
 
 Strings continuam longtext NOT NULL para não reduzir colunas existentes. Validações de nome/país/posição e valores positivos ficam nos casos de uso. Age e Position não ganham restrições novas nesta fase.
 
+## Etapa 2 — colunas aditivas de clubes
+
+`AddCustomTeamBadges`, gerada sem aplicação, adiciona a Teams:
+
+| Coluna | Tipo MySQL | Compatibilidade |
+| --- | --- | --- |
+| IsCustom | tinyint(1) NOT NULL DEFAULT 0 | Clubes anteriores continuam não personalizados |
+| BadgeTemplate | varchar(32) NULL | Template ausente recebe fallback visual |
+| PrimaryColor | varchar(7) NULL | Cor #RRGGBB, definida na criação personalizada |
+| SecondaryColor | varchar(7) NULL | Cor #RRGGBB, definida na criação personalizada |
+
+Não altera Name/Country/Strength, não recria tabelas e não modifica elencos existentes. Armazena apenas identificador do modelo e cores, nunca SVG. Novos clube/jogadores são inseridos em transação explícita; atomicidade requer tabelas transacionais InnoDB. Não alterar engines automaticamente.
+
+O modelo novo consulta as colunas adicionais em GET /teams; portanto o MySQL existente precisa do schema atualizado antes de usar a API nova. Não foi executado database update, DDL ou cadastro no banco nesta entrega. O teste SQLite usa conexão :memory: exclusivamente no projeto Tests, não os arquivos legados nem a configuração de produção.
+
+SQL específico de revisão: `mysql-custom-team-badges.sql`, gerado da migration anterior até AddCustomTeamBadges. Ele presume que AddPlayerTeamRelationship já consta no histórico. Se essa FK ainda estiver pendente, o update normal tentará aplicá-la antes das quatro colunas: conferir órfãos e histórico real novamente, sem confiar nas contagens antigas desta documentação.
+
+DDL MySQL faz commit implícito: START TRANSACTION no script gerado não garante rollback dos ALTER TABLE. Isso é diferente da transação de INSERT do clube/elenco, que é verificada nos testes. Revisar uma migration parcialmente executada requer comparar colunas e histórico, sem rodar o script cegamente.
+
+Após backup, revisão em cópia e autorização explícita, gerar o script COMPLETO das migrations realmente pendentes usando a última migration aplicada como origem:
+
+```powershell
+dotnet ef migrations list --project backend/MiniBrasfoot.Infrastructure --startup-project backend/MiniBrasfoot.Api
+dotnet ef migrations script ULTIMA_MIGRATION_APLICADA AddCustomTeamBadges --project backend/MiniBrasfoot.Infrastructure --startup-project backend/MiniBrasfoot.Api --output artifacts/pending-migrations.sql
+```
+
+Substituir o marcador pelo ID conferido em __EFMigrationsHistory; não executar esse exemplo literalmente. A aplicação continua sem migrations automáticas. Evitar rollback Down de AddCustomTeamBadges em banco com clubes personalizados: ele remove as colunas e seus dados de identidade.
+
 `Goal` é um resultado de simulação; `Historico` existe como classe, mas não tem tabela/DbSet. Nenhuma tabela futura foi criada.
 
 ## Provider e conexão

@@ -8,6 +8,11 @@ public static class TeamEndpoints
     public static void MapTeamEndpoints(this WebApplication app)
     {
         var group = app.MapGroup("/teams").WithTags("Times");
+        group.MapPost("/custom", async (CustomTeamInput input, CustomTeamService service, CancellationToken ct) =>
+        {
+            var result = await service.Create(input, ct);
+            return Results.Created($"/teams/{result.Team.Id}", result);
+        }).WithSummary("Cria clube personalizado e elenco 4-4-2 atomicamente.");
         group.MapGet("", async (TeamService service, CancellationToken ct) => Results.Ok(await service.List(ct)));
         group.MapGet("/{id:int}", async (int id, TeamService service, CancellationToken ct) => Results.Ok(await service.Get(id, ct)));
         group.MapPost("", async (TeamInput input, TeamService service, ILogger<TeamService> logger, CancellationToken ct) =>

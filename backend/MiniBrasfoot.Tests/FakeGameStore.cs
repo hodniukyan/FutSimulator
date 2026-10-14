@@ -17,4 +17,11 @@ internal sealed class FakeGameStore : IGameStore
     public void RemoveTeam(Team team) => Teams.Remove(team);
     public void RemovePlayer(Player player) => Players.Remove(player);
     public Task Save(CancellationToken ct) => Task.CompletedTask;
+    public Task CreateTeamWithPlayers(Team team, IReadOnlyList<Player> players, CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
+        AddTeam(team);
+        foreach (var player in players) { player.TeamId = team.Id; AddPlayer(player); }
+        return Task.CompletedTask;
+    }
 }

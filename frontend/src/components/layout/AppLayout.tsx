@@ -21,9 +21,12 @@ export function AppLayout({ children }: { children: ReactNode }) {
           <span className="rounded-lg bg-primary p-2 text-primary-foreground"><Trophy aria-hidden="true" size={22} /></span>
           <span>MINI BRASFOOT<span className="block text-xs font-normal text-muted-foreground">Seu clube. Sua história.</span></span>
         </NavLink>
+        <div className="flex items-center gap-3">
+        <NavLink to="/clubs" className="text-sm font-medium text-muted-foreground hover:text-foreground">Clubes</NavLink>
         <Button variant="outline" size="icon" onClick={toggleTheme} aria-label={dark ? 'Ativar tema claro' : 'Ativar tema escuro'}>
           {dark ? <Sun /> : <Moon />}
         </Button>
+        </div>
       </div>
     </header>
     <main className="mx-auto max-w-6xl px-5 py-10">{children}</main>

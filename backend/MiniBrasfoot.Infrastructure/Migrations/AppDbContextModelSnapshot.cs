@@ -61,13 +61,30 @@ namespace BrasfootAPI.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("BadgeTemplate")
+                        .HasMaxLength(32)
+                        .HasColumnType("varchar(32)");
+
                     b.Property<string>("Country")
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<bool>("IsCustom")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<string>("PrimaryColor")
+                        .HasMaxLength(7)
+                        .HasColumnType("varchar(7)");
+
+                    b.Property<string>("SecondaryColor")
+                        .HasMaxLength(7)
+                        .HasColumnType("varchar(7)");
 
                     b.Property<int>("Strength")
                         .HasColumnType("int");

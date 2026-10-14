@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" role="img" aria-label="Escudo redondo com coroa">
+  <circle cx="60" cy="76" r="52" fill="var(--primary-color, #F97316)" stroke="var(--secondary-color, #17212B)" stroke-width="5"/>
+  <circle cx="60" cy="76" r="43" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+  <path d="M35 58 42 76H78L85 58 70 67 60 48 50 67Z" fill="#FFFFFF" stroke="var(--secondary-color, #17212B)" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M43 83H77" stroke="var(--secondary-color, #17212B)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M45 94H75" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+</svg>

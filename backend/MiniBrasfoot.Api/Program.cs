@@ -31,6 +31,8 @@ builder.Services.AddScoped<TeamService>();
 builder.Services.AddScoped<PlayerService>();
 builder.Services.AddScoped<MatchService>();
 builder.Services.AddSingleton<MatchSimulator>();
+builder.Services.AddSingleton<PlayerGenerator>();
+builder.Services.AddScoped<CustomTeamService>();
 
 var app = builder.Build();
 app.UseExceptionHandler();

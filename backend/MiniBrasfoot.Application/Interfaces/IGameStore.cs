@@ -15,4 +15,5 @@ public interface IGameStore
     void RemoveTeam(Team team);
     void RemovePlayer(Player player);
     Task Save(CancellationToken ct);
+    Task CreateTeamWithPlayers(Team team, IReadOnlyList<Player> players, CancellationToken ct);
 }

@@ -18,6 +18,7 @@ public sealed class ApiTests
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Development");
+            builder.UseSetting("Database:ServerVersion", "8.0.45");
             builder.ConfigureTestServices(services =>
             {
                 services.RemoveAll<IGameStore>();

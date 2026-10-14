@@ -18,4 +18,23 @@ public sealed class EfGameStore(AppDbContext db) : IGameStore
     public void RemoveTeam(Team team) => db.Teams.Remove(team);
     public void RemovePlayer(Player player) => db.Players.Remove(player);
     public async Task Save(CancellationToken ct) => await db.SaveChangesAsync(ct);
+    public async Task CreateTeamWithPlayers(Team team, IReadOnlyList<Player> players, CancellationToken ct)
+    {
+        await using var transaction = await db.Database.BeginTransactionAsync(ct);
+        try
+        {
+            db.Teams.Add(team);
+            await db.SaveChangesAsync(ct);
+            foreach (var player in players) player.TeamId = team.Id;
+            db.Players.AddRange(players);
+            await db.SaveChangesAsync(ct);
+            await transaction.CommitAsync(ct);
+        }
+        catch
+        {
+            await transaction.RollbackAsync(CancellationToken.None);
+            db.ChangeTracker.Clear();
+            throw;
+        }
+    }
 }
