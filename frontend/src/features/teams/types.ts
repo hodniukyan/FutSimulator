@@ -1,4 +1,5 @@
 import type { Player } from '@/features/players/types'
+import type { ModeloDeUniforme } from './modelos-de-uniforme'
 
 export type BadgeTemplate = 'shield-hexagonal' | 'shield-round' | 'shield-triangular'
 
@@ -11,6 +12,7 @@ export interface Team {
   badgeTemplate?: BadgeTemplate | null
   primaryColor?: string | null
   secondaryColor?: string | null
+  modeloDoUniforme?: ModeloDeUniforme | null
 }
 
 export interface CustomTeamInput {
@@ -19,6 +21,7 @@ export interface CustomTeamInput {
   badgeTemplate: BadgeTemplate
   primaryColor: string
   secondaryColor: string
+  modeloDoUniforme?: ModeloDeUniforme
 }
 
 export interface CustomTeamResult { team: Team; players: Player[] }

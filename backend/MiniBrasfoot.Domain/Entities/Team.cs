@@ -9,4 +9,5 @@ public class Team
     public string? BadgeTemplate { get; set; }
     public string? PrimaryColor { get; set; }
     public string? SecondaryColor { get; set; }
+    public string? ModeloDoUniforme { get; set; }
 }

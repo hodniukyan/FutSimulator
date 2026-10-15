@@ -74,6 +74,10 @@ namespace BrasfootAPI.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false);
 
+                    b.Property<string>("ModeloDoUniforme")
+                        .HasMaxLength(32)
+                        .HasColumnType("varchar(32)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");

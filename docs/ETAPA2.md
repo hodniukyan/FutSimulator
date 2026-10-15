@@ -4,6 +4,15 @@ Clubes personalizados, geração automática de elenco e escudos SVG com cores d
 
 ## Resultado
 
+### Melhoria da Etapa 2 - 14/10/2026
+
+- Quatro templates de uniformes 8-bit em SVG: horizontal, vertical, liso e meio a meio; seletor e prévia nas cores do clube, camisa nos cards e no retorno do cadastro.
+- Identificador `ModeloDoUniforme` validado no backend e persistido na tabela Teams. Migration aditiva `AdicionarModeloDeUniforme` e SQL revisado em `mysql-modelo-de-uniforme.sql`, sem aplicação ao MySQL nesta entrega.
+- Código novo em português e compatibilidade com requisições anteriores sem uniforme (modelo liso).
+- **69 testes .NET e 26 testes frontend aprovados**, builds e lint concluídos. Evidências e limites em [VALIDATION.md](VALIDATION.md).
+- Arquitetura e decisões futuras da competição guardadas em [PLANEJAMENTO-COMPETICOES.md](PLANEJAMENTO-COMPETICOES.md), sem implementar a rotina agora.
+- Comandos de uso diário, instalação inicial e distinção de migrations documentados em [INICIAR-PROJETO.md](INICIAR-PROJETO.md).
+
 - POST /teams/custom valida identidade, gera 11 jogadores, calcula força e persiste o conjunto atomicamente. Retorna 201/Location com `team` e `players`.
 - Formação 4-4-2: 1 GK, 4 DEF (2 zagueiros + 2 laterais), 4 MEI (2 volantes + 2 meias), 2 ATT. O modelo existente agrupa as subfunções. Nomes fictícios únicos por elenco; idades 18–32 e habilidades 50–80; força = média truncada.
 - /clubs e /clubs/new incluem seleção de modelo/cores, preview, loading/erro e elenco criado. TeamBadge é reutilizado na seleção e no placar de amistosos.

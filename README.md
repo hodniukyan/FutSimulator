@@ -33,11 +33,11 @@ O README anterior foi preservado integralmente em [docs/README-LEGACY.md](docs/R
 
 ## Executar localmente
 
-Abra um terminal na raiz deste projeto:
+Guia rápido: [como iniciar o projeto](docs/INICIAR-PROJETO.md). No uso diário, mantenha o MySQL ligado e abra dois terminais na raiz `BrasfootAPI`.
+
+Terminal 1 - backend:
 
 ```powershell
-dotnet restore BrasfootAPI.sln
-dotnet tool restore
 dotnet run --project backend/MiniBrasfoot.Api --launch-profile http
 ```
 
@@ -52,15 +52,22 @@ dotnet user-secrets set "ConnectionStrings:DefaultConnection" "server=localhost;
 
 Alternativamente defina `ConnectionStrings__DefaultConnection` no ambiente. A API detecta a versão do servidor; `Database__ServerVersion` permite informar a versão real explicitamente. Para produção, a conexão deve ser fornecida externamente.
 
-Em outro terminal:
+Terminal 2 - frontend:
 
 ```powershell
-npm --prefix frontend ci
-Copy-Item frontend/.env.example frontend/.env.local
-npm --prefix frontend run dev
+npm.cmd --prefix frontend run dev
 ```
 
 Frontend: http://localhost:5173. Configure `VITE_API_URL` em `frontend/.env.local` se mudar host/porta. Nunca coloque senhas em variáveis VITE_ — elas são públicas no navegador.
+
+Na primeira instalação ou quando as dependências mudarem, execute antes:
+
+```powershell
+dotnet restore BrasfootAPI.sln
+npm.cmd --prefix frontend ci
+```
+
+Use Ctrl + C para parar cada processo. `npm.cmd` evita o bloqueio de npm.ps1 no PowerShell. Migrations são aplicadas somente quando houver schema pendente e após backup/revisão/autorização; não fazem parte da inicialização diária.
 
 O `.env.example` da raiz documenta variáveis do backend e Compose. `dotnet run` não carrega `.env` automaticamente. Não há migrations automáticas na inicialização.
 
@@ -122,6 +129,22 @@ Exemplo de formato de retorno:
 ```
 
 Histórico ainda não é persistido; seu modelo existente foi preservado para uma próxima etapa.
+
+## Uniformes personalizados
+
+A criação de clubes oferece quatro camisas SVG em estilo 8-bit: listras horizontais, verticais, liso e meio a meio. Selecione o modelo em `/clubs/new`; as cores acompanham a identidade do clube. O liso usa somente a primária, com gola/contorno neutros. Cards de clubes e o resultado do cadastro também mostram a camisa.
+
+Campo opcional adicional em `POST /teams/custom`:
+
+```json
+{ "modeloDoUniforme": "uniforme-meio-a-meio" }
+```
+
+Acrescente ao corpo completo do clube documentado acima. Aceitos: `uniforme-listrado-horizontal`, `uniforme-listrado-vertical`, `uniforme-liso` e `uniforme-meio-a-meio`. Omitir o campo preserva clientes anteriores e assume liso; valor null/desconhecido retorna 400. Clube anterior sem modelo recebe apresentação lisa com fallback seguro, sem atualização de seus dados.
+
+Persistência: `Teams.ModeloDoUniforme`, opcional, até 32 caracteres. A migration `AdicionarModeloDeUniforme` precisa ser aplicada após backup/revisão/autorização antes de usar a API nova no MySQL, inclusive GET de clubes. SVGs somente em `frontend/src/assets/kits/`. Nenhuma tabela nova para uniformes ou competições.
+
+O torneio continua apenas planejado em [PLANEJAMENTO-COMPETICOES.md](docs/PLANEJAMENTO-COMPETICOES.md), com 16 clubes, clube acompanhado e botões Avançar/Fechar conforme o resultado.
 
 ## Banco e migrations
 

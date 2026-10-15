@@ -4,6 +4,7 @@ import { buttonVariants, Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { useTeams } from '@/features/teams/use-teams'
 import { TeamBadge } from '@/features/teams/components/TeamBadge'
+import { UniformeDoClube } from '@/features/teams/components/UniformeDoClube'
 import { getHttpError } from '@/services/http'
 
 export function TeamsPage() {
@@ -20,7 +21,8 @@ export function TeamsPage() {
     {teams.isSuccess && <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {teams.data.map(team => <Card key={team.id} className="gap-3 p-5">
         <div className="flex items-center gap-4"><TeamBadge template={team.badgeTemplate} primaryColor={team.primaryColor} secondaryColor={team.secondaryColor} name={team.name} />
-          <div className="min-w-0"><h2 className="break-words font-semibold">{team.name}</h2><p className="text-sm text-muted-foreground">{team.country}</p></div></div>
+          <div className="min-w-0 flex-1"><h2 className="break-words font-semibold">{team.name}</h2><p className="text-sm text-muted-foreground">{team.country}</p></div>
+          <UniformeDoClube modelo={team.modeloDoUniforme} corPrimaria={team.primaryColor} corSecundaria={team.secondaryColor} nomeDoClube={team.name} tamanho={48} /></div>
         <div className="flex justify-between gap-3 border-t pt-3 text-xs text-muted-foreground"><span>{team.isCustom ? 'Personalizado' : 'Clube existente'}</span><span>Força {team.strength}</span></div>
       </Card>)}
     </div>}

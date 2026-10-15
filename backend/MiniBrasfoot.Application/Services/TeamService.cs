@@ -39,5 +39,5 @@ public sealed class TeamService(IGameStore store)
     private async Task<Team> Find(int id, CancellationToken ct) => await store.FindTeam(id, ct)
         ?? throw new UseCaseException(FailureKind.NotFound, "Time não encontrado");
     internal static TeamDto Map(Team team) => new(team.Id, team.Name, team.Country, team.Strength,
-        team.IsCustom, team.BadgeTemplate, team.PrimaryColor, team.SecondaryColor);
+        team.IsCustom, team.BadgeTemplate, team.PrimaryColor, team.SecondaryColor, team.ModeloDoUniforme);
 }

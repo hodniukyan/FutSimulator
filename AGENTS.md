@@ -32,6 +32,8 @@
 
 ## Comandos (a partir da raiz)
 
+- Para o uso diário no Windows, seguir `docs/INICIAR-PROJETO.md`: dois terminais (dotnet run e npm.cmd run dev), serviço MySQL ativo e schema compatível. Instalação de dependências e migrations não são tarefas de toda inicialização.
+
 ```powershell
 dotnet restore BrasfootAPI.sln
 dotnet build BrasfootAPI.sln -m:1 /nr:false
@@ -56,7 +58,7 @@ npm --prefix frontend run dev
 
 - SVGs originais em `frontend/src/assets/shields/`: nunca redesenhar, alterar geometria ou substituir por ícones. Importar com `?react` usando SVGR com `svgo: false`.
 - `TeamBadge` é a única implementação visual dos templates. Aplicar `--primary-color` e `--secondary-color` por instância; preservar branco e `viewBox`. Clubes sem template usam iniciais neutras.
-- `POST /teams/custom` recebe somente nome, país, template e duas cores #RRGGBB. `IsCustom` e força inicial são definidos no backend.
+- `POST /teams/custom` recebe nome, país, template, duas cores #RRGGBB e o modelo opcional de uniforme. `IsCustom` e força inicial são definidos no backend.
 - `PlayerGenerator` permanece no Domain, sem EF. São 11 nomes únicos, idades 18–32 e habilidades 50–80 inclusivas. Posições: 1 GK, 4 DEF, 4 MEI, 2 ATT, com slots internos do 4-4-2.
 - Força inicial = média truncada dos 11 jogadores. Não modificar a soma da força com média de habilidade no simulador.
 - `IGameStore.CreateTeamWithPlayers` deve persistir clube e elenco na mesma transação. Testar rollback real, não apenas fake.
@@ -64,3 +66,12 @@ npm --prefix frontend run dev
 - `AddCustomTeamBadges` foi gerada sem aplicação. Antes de aplicar: backup, preflight, revisão da FK anterior pendente e autorização do usuário.
 - Competições estão apenas documentadas em `docs/ARCHITECTURE.md`; nenhuma entidade/tabela/endpoint de campeonato deve ser criada nesta etapa.
 - Testes de SVG e formulário: `npm --prefix frontend run test`. Testes usam os desenhos reais, incluindo verificação de hashes.
+
+## Uniformes e planejamento de competições
+
+- Decisões futuras do torneio estão em `docs/PLANEJAMENTO-COMPETICOES.md`. Sua implementação está expressamente adiada; não criar botão, serviço, endpoint ou tabela dessa feature junto com os uniformes.
+- Templates em `frontend/src/assets/kits/`: horizontal, vertical, liso e meio a meio. Estilo 8-bit, formas ortogonais e `shape-rendering="crispEdges"`, sem gradientes/sombras. Não modificar os escudos existentes.
+- `UniformeDoClube` reutiliza imports SVGR e as variáveis de cores dos escudos. O liso não consome `--secondary-color`; gola/contorno são neutros.
+- Persistir somente `Teams.ModeloDoUniforme` (varchar(32), opcional para clubes anteriores). Não salvar SVG nem criar tabela para templates fixos.
+- `ModelosDeUniforme` define os identificadores válidos; Application valida e preserva contratos anteriores. `modeloDoUniforme` omitido em POST /teams/custom assume uniforme-liso; null explícito/desconhecido é inválido.
+- Migration `AdicionarModeloDeUniforme` apenas gerada/revisada. Verificar backup/histórico e obter autorização antes de atualizar o banco real.

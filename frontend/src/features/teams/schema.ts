@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { identificadoresDeUniforme } from './modelos-de-uniforme'
 
 const color = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Use o formato #RRGGBB.').length(7)
 
@@ -8,6 +9,7 @@ export const customTeamSchema = z.object({
   badgeTemplate: z.enum(['shield-hexagonal', 'shield-round', 'shield-triangular']),
   primaryColor: color,
   secondaryColor: color,
+  modeloDoUniforme: z.enum(identificadoresDeUniforme).optional(),
 })
 
 export type CustomTeamFormValues = z.infer<typeof customTeamSchema>

@@ -13,6 +13,16 @@ Strings continuam longtext NOT NULL para não reduzir colunas existentes. Valida
 
 ## Etapa 2 — colunas aditivas de clubes
 
+### Extensão de uniformes (14/10/2026)
+
+`AdicionarModeloDeUniforme` adiciona somente `Teams.ModeloDoUniforme`, varchar(32) NULL. Clubes anteriores permanecem null; não altera força, jogadores, cores ou escudos. Novo clube personalizado recebe um dos quatro identificadores válidos. Requisição anterior sem o campo assume uniforme-liso na aplicação, sem preencher retroativamente o banco.
+
+Identificador retornado na criação/listagem/consulta; não se persiste SVG nem se criam tabelas adicionais para modelos. A API nova consulta essa coluna: atualizar o schema é necessário antes de usá-la contra o MySQL existente.
+
+Migration apenas gerada/revisada; não aplicar automaticamente ou sem autorização. Confirmar backup, histórico real e migrations anteriores pendentes antes do update. Down remove a coluna e seus valores; não é uma reversão segura para clubes com uniforme salvo. Testes usam SQLite isolado em memória, não o MySQL do usuário.
+
+Script específico de revisão: [mysql-modelo-de-uniforme.sql](mysql-modelo-de-uniforme.sql), da migration AddCustomTeamBadges até AdicionarModeloDeUniforme. Se houver migrations anteriores pendentes, revisar o conjunto completo a partir do histórico real. DDL MySQL não recebe a mesma garantia de rollback de uma transação de INSERT.
+
 `AddCustomTeamBadges`, gerada sem aplicação, adiciona a Teams:
 
 | Coluna | Tipo MySQL | Compatibilidade |

@@ -12,5 +12,6 @@ public sealed class TeamConfiguration : IEntityTypeConfiguration<Team>
         builder.Property(team => team.BadgeTemplate).HasMaxLength(32);
         builder.Property(team => team.PrimaryColor).HasMaxLength(7);
         builder.Property(team => team.SecondaryColor).HasMaxLength(7);
+        builder.Property(clube => clube.ModeloDoUniforme).HasMaxLength(32);
     }
 }

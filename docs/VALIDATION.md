@@ -1,5 +1,26 @@
 # Validação — fase 1, 12/10/2026 (America/Cuiaba)
 
+## Uniformes e planejamento de competições - 14/10/2026
+
+- Planejamento e decisões do usuário salvos em PLANEJAMENTO-COMPETICOES.md. Não foi implementada rotina, botão, endpoint ou tabela de competição.
+- Quatro SVGs 8-bit novos em src/assets/kits, sem alterar os três escudos fornecidos. Imports React via SVGR existente, sem novas dependências.
+- Build .NET: zero erros/avisos. xUnit: **69 testes aprovados**, sem falhas/ignorados.
+- Build React/TypeScript/Vite e ESLint aprovados. Vitest: **26 testes aprovados**, incluindo os testes anteriores de preservação dos escudos.
+- Novos testes verificam quatro modelos, rejeição de inválido/null, compatibilidade de JSON anterior sem uniforme (liso), retorno em criação/GET/lista, preservação pelo PUT anterior e persistência de identificador com clube antigo intacto em SQLite isolado em memória.
+- Frontend: SVG inline, geometria ortogonal/crispEdges sem filtros/gradientes/IDs compartilhados, independência de cores, liso sem secundária no desenho, fallback de modelo desconhecido/cores inválidas, seleção acessível e validação de formulário.
+- Migration AdicionarModeloDeUniforme e snapshot consistentes: has-pending-model-changes sem diferenças. SQL gerado/revisado acrescenta somente Teams.ModeloDoUniforme varchar(32) NULL e registra o histórico. Não aplicado ao MySQL; nenhum dado real alterado.
+- QA visual com Vite na porta 5174 e API simulada em memória na 5064. Não usa MySQL. Verificados seleção, prévia, liso inalterado ao trocar secundária, falha preservando seleção, retry com sucesso, 11 jogadores e cards com uniforme. A 390px, documento de 375px sem overflow horizontal, inclusive no sucesso do cadastro.
+- Estilos computados da camisa meio a meio: contorno rgb(17,24,39), primária rgb(22,93,255), secundária rgb(255,215,0), gola branca. No liso, somente contorno, primária e gola mesmo após trocar secundária para verde.
+- Não foi realizada nova validação do histórico/schema/credenciais do MySQL. Banco oficial continua MySQL/Pomelo; SQLite apenas nos testes. A API nova requer a coluna antes de consultar clubes no banco existente.
+
+![Uniformes no formulário desktop](images/uniformes-desktop.jpg)
+
+![Uniformes em tela mobile](images/uniformes-mobile.jpg)
+
+![Camisas nos cards de clubes e fallback do clube anterior](images/uniformes-clubes.jpg)
+
+---
+
 ## Etapa 2 — 13/10/2026 (America/Cuiaba)
 
 | Verificação executada | Resultado |

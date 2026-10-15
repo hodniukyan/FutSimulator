@@ -6,6 +6,12 @@ Separação de responsabilidades, preservação do MySQL, contratos DTO, tratame
 
 ## Próximas etapas propostas
 
+### Uniformes e decisões de competição (14/10/2026)
+
+Uniformes 8-bit no cadastro: quatro modelos SVG, prévia nas cores do clube, validação/persistência do identificador e fallback para clubes anteriores. Migration aguardando aplicação autorizada.
+
+Competições continuam sem implementação por decisão do usuário. Versão inicial com exatamente 16 clubes, clube acompanhado, uma partida por vez e navegação Avançar/Fechar conforme vitória/derrota. Arquitetura, propostas e pendências: [PLANEJAMENTO-COMPETICOES.md](PLANEJAMENTO-COMPETICOES.md). Mais participantes, ligas e pontos corridos ficam para evolução posterior.
+
 ### Etapa 2 — implementada, schema aguardando aplicação autorizada
 
 Criação de clube personalizado via POST /teams/custom, elenco automático 4-4-2, força inicial no backend, gravação atômica, SVGs originais com cores por instância, listagem/formulário responsivos e escudos no placar. Migration AddCustomTeamBadges preparada sem aplicação. Testes cobrem contratos antigos, validação, geração, compatibilidade com simulação e rollback em banco de teste.

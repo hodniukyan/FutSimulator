@@ -62,6 +62,16 @@ EfGameStore inicia transação, salva Team para obter seu ID, preenche TeamId do
 
 ## Escudos e frontend
 
+### Extensão de uniformes
+
+`ModelosDeUniforme` no Domain mantém os identificadores de quatro modelos. `CustomTeamService` valida o campo opcional, define `Team.ModeloDoUniforme` e usa a mesma operação atômica de clube/elenco. DTOs de consulta retornam `modeloDoUniforme`. O CRUD anterior de nome/país/força preserva esse metadado.
+
+Infrastructure mapeia uma coluna opcional varchar(32). Migration aditiva `AdicionarModeloDeUniforme`, sem aplicação nesta entrega. Não há tabela de templates, cópia de cores ou SVG persistido. Cores continuam nas propriedades existentes do clube.
+
+Frontend: `modelos-de-uniforme.ts` define união/legendas, `UniformeDoClube.tsx` importa os SVGs, `SeletorDeUniforme.tsx` oferece radios e `PreviaDoUniforme.tsx` apresenta a camisa ampliada. Criação mantém RHF/Zod/TanStack Query e o cliente HTTP; cards e sucesso do cadastro reutilizam a camisa. Identificadores novos em português; anteriores preservados para compatibilidade.
+
+SVGs em grade 64x64, comandos ortogonais inteiros, contorno neutro e crispEdges. Horizontal, vertical e meio a meio consomem as duas cores; liso somente a primária. Sem IDs/clipPaths compartilhados, para que instâncias não colidam. Nenhuma alteração nos escudos fornecidos.
+
 - `frontend/src/assets/shields/*.svg`: os três arquivos fornecidos, movidos sem modificar bytes.
 - Vite/SVGR importa `*.svg?react`; `svgo: false` impede otimização/redesenho. Não usar img para passar variáveis CSS ao documento SVG.
 - `TeamBadge` resolve template, aplica `--primary-color` e `--secondary-color` ao SVG inline, conserva proporção 120:140 e aceita tamanho/nome. Template ausente/desconhecido usa iniciais neutras. Cores inválidas usam defaults seguros.
@@ -77,6 +87,8 @@ EfGameStore inicia transação, salva Team para obter seu ID, preenche TeamId do
 4. Testar todos os elementos do desenho, cores por instância e acessibilidade. Registrar hash do novo arquivo em TeamBadge.test.tsx; nunca atualizar hashes antigos para encobrir alterações de arte.
 
 ## Arquitetura futura de competições — somente proposta
+
+Decisões mais recentes e limites de autorização: [PLANEJAMENTO-COMPETICOES.md](PLANEJAMENTO-COMPETICOES.md). Primeira versão confirmada com 16 clubes e uma partida por vez acompanhando um clube: derrota oferece Fechar para a página inicial; vitória intermediária oferece Avançar. Implementação expressamente adiada para priorizar uniformes.
 
 | Componente | Responsabilidade proposta |
 | --- | --- |

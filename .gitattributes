@@ -1,4 +1,5 @@
 # Preservar os bytes dos escudos originais, inclusive as quebras de linha.
 frontend/src/assets/shields/*.svg -text
+frontend/src/assets/kits/*.svg -text
 # PDFs devem permanecer binários para evitar conversão de quebras de linha.
 output/pdf/*.pdf binary

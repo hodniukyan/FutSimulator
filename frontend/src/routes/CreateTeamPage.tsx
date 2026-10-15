@@ -8,6 +8,9 @@ import { BadgeSelector } from '@/features/teams/components/BadgeSelector'
 import { BadgePreview } from '@/features/teams/components/BadgePreview'
 import { TeamBadge } from '@/features/teams/components/TeamBadge'
 import { ColorPicker } from '@/features/teams/components/ColorPicker'
+import { SeletorDeUniforme } from '@/features/teams/components/SeletorDeUniforme'
+import { PreviaDoUniforme } from '@/features/teams/components/PreviaDoUniforme'
+import { UniformeDoClube } from '@/features/teams/components/UniformeDoClube'
 import { customTeamSchema, type CustomTeamFormValues } from '@/features/teams/schema'
 import { useCreateTeam } from '@/features/teams/use-create-team'
 import { getHttpError } from '@/services/http'
@@ -21,7 +24,7 @@ export function CreateTeamPage() {
   const mutation = useCreateTeam()
   const { register, control, handleSubmit, reset, formState: { errors } } = useForm<CustomTeamFormValues>({
     resolver: zodResolver(customTeamSchema),
-    defaultValues: { name: '', country: 'Brasil', badgeTemplate: 'shield-hexagonal', primaryColor: '#F97316', secondaryColor: '#17212B' },
+    defaultValues: { name: '', country: 'Brasil', badgeTemplate: 'shield-hexagonal', primaryColor: '#F97316', secondaryColor: '#17212B', modeloDoUniforme: 'uniforme-liso' },
   })
   const values = useWatch({ control })
   const primaryColor = values.primaryColor ?? '#F97316'
@@ -33,7 +36,8 @@ export function CreateTeamPage() {
       <p role="status" className="mb-4 text-sm font-medium text-primary">Clube criado com sucesso!</p>
       <Card className="gap-4 p-6">
         <div className="flex items-center gap-5"><TeamBadge template={team.badgeTemplate} primaryColor={team.primaryColor} secondaryColor={team.secondaryColor} name={team.name} size={80} />
-          <div className="min-w-0"><h1 className="break-words text-2xl font-semibold">{team.name}</h1><p className="mt-1 text-muted-foreground">{team.country} · Força {team.strength}</p></div></div>
+          <div className="min-w-0 flex-1"><h1 className="break-words text-2xl font-semibold">{team.name}</h1><p className="mt-1 text-muted-foreground">{team.country} · Força {team.strength}</p></div>
+          <UniformeDoClube modelo={team.modeloDoUniforme} corPrimaria={team.primaryColor} corSecundaria={team.secondaryColor} nomeDoClube={team.name} tamanho={64} /></div>
         <h2 className="mt-3 text-lg font-semibold">Seu elenco · 4-4-2</h2>
         <div className="overflow-x-auto"><table className="w-full text-left text-sm">
           <caption className="sr-only">Os 11 jogadores gerados para {team.name}</caption>
@@ -70,6 +74,10 @@ export function CreateTeamPage() {
           <Controller name="secondaryColor" control={control} render={({ field }) => <ColorPicker id="secondaryColor" label="Cor secundária" value={field.value}
             onChange={field.onChange} disabled={mutation.isPending} error={errors.secondaryColor?.message} />} />
         </div>
+        <Controller name="modeloDoUniforme" control={control} render={({ field: campo }) => <SeletorDeUniforme
+          modeloSelecionado={campo.value ?? 'uniforme-liso'} aoSelecionar={campo.onChange}
+          corPrimaria={primaryColor} corSecundaria={secondaryColor} desabilitado={mutation.isPending} />} />
+        {errors.modeloDoUniforme && <p role="alert" className="text-xs text-destructive">{errors.modeloDoUniforme.message}</p>}
         <p className="text-xs text-muted-foreground">Formação 4-4-2, jogadores de 18 a 32 anos e habilidades de 50 a 80. A força inicial será calculada a partir do elenco.</p>
         <Button type="submit" className="w-full" disabled={mutation.isPending}>{mutation.isPending ? <><LoaderCircle className="animate-spin" /> Criando clube...</> : <><Plus /> Criar clube</>}</Button>
         {mutation.isError && <p role="alert" className="text-sm text-destructive">{getHttpError(mutation.error)}</p>}
@@ -77,6 +85,7 @@ export function CreateTeamPage() {
       <Card className="gap-0 p-6"><h2 className="text-lg font-semibold">Sua identidade</h2><p className="mt-1 text-sm text-muted-foreground">Prévia em tempo real</p>
         <BadgePreview template={values.badgeTemplate} primaryColor={primaryColor} secondaryColor={secondaryColor} name={values.name} />
         <p className="text-center text-sm text-muted-foreground">{values.country || 'Selecione um país'}</p>
+        <PreviaDoUniforme modelo={values.modeloDoUniforme} corPrimaria={primaryColor} corSecundaria={secondaryColor} nomeDoClube={values.name?.trim() || 'Seu clube'} />
       </Card>
     </div>
   </>

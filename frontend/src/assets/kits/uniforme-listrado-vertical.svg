@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Uniforme 8-bit com listras verticais" shape-rendering="crispEdges">
+  <path d="M20 8H28V12H36V8H44V12H48V16H52V20H56V32H44V56H20V32H8V20H12V16H16V12H20Z" fill="#111827"/>
+  <path d="M22 10H26V14H38V10H42V14H46V18H50V22H54V30H42V54H22V30H10V22H14V18H18V14H22Z" fill="var(--primary-color, #F97316)"/>
+  <path d="M22 16H26V54H22ZM30 16H34V54H30ZM38 16H42V54H38ZM14 20H18V30H14ZM46 20H50V30H46Z" fill="var(--secondary-color, #17212B)"/>
+  <path d="M26 10H28V14H36V10H38V16H26Z" fill="#FFFFFF"/>
+</svg>
